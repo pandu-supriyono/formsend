@@ -15,4 +15,10 @@ export class UserService {
       email,
     });
   }
+
+  async findById(id: number) {
+    return await this.userRepository.findOne({
+      id,
+    });
+  }
 }
