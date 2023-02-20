@@ -69,9 +69,10 @@
     "typescript": "^4.7.4"
   },
   "mikro-orm": {
-    "useTsNode": true,
+    "tsConfigPath": "./src/mikro-orm/mikro-orm.config.ts",
     "configPaths": [
-      "./src/mikro-orm/mikro-orm.config.ts"
+      "./src/mikro-orm/mikro-orm.config.ts",
+      "./dist/mikro-orm/mikro-orm.config.js"
     ]
   },
   "jest": {
