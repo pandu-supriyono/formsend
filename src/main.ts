@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 import { EnvironmentVariables } from './config';
 import * as session from 'express-session';
 import * as pgSessionStore from 'connect-pg-simple';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -34,6 +35,12 @@ async function bootstrap() {
       cookie: {
         maxAge: configService.get('COOKIE_MAX_AGE'),
       },
+    }),
+  );
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
     }),
   );
 
