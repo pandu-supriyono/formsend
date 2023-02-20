@@ -1,5 +1,11 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  validateSync,
+} from 'class-validator';
 
 export enum Environment {
   Development = 'development',
@@ -17,6 +23,17 @@ export class EnvironmentVariables {
 
   @IsString()
   POSTGRES_URL: string;
+
+  @IsString()
+  SESSION_SECRET: string;
+
+  @IsNumber()
+  @IsOptional()
+  COOKIE_MAX_AGE = 60 * 60 * 24 * 7 * 1000;
+
+  @IsString()
+  @IsOptional()
+  COOKIE_NAME = '__FORM_SEND__';
 }
 
 export function validateConfig(config: Record<string, unknown>) {
