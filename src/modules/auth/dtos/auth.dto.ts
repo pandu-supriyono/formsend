@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
@@ -8,6 +9,7 @@ import {
 
 export class SignInDto {
   @IsEmail()
+  @Transform(({ value }: { value: string }) => value.toLowerCase().trim())
   email: string;
 
   @IsString()

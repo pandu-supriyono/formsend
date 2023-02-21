@@ -45,7 +45,7 @@ describe('AuthModule (e2e)', () => {
     const emInstance = em.fork();
 
     user = emInstance.create(User, {
-      email: fakeUserRaw.email,
+      email: fakeUserRaw.email.toLowerCase(),
       password: hashedPassword,
     });
 
@@ -125,7 +125,20 @@ describe('AuthModule (e2e)', () => {
         .send(fakeUserRaw);
 
       expect(result.body).toMatchObject({
-        email: fakeUserRaw.email,
+        email: fakeUserRaw.email.toLowerCase(),
+      });
+    });
+
+    it('is case insensitive for email addresses', async () => {
+      const result = await request(app.getHttpServer())
+        .post('/api/auth/sign-in')
+        .send({
+          ...fakeUserRaw,
+          email: fakeUserRaw.email.toUpperCase(),
+        });
+
+      expect(result.body).toMatchObject({
+        email: fakeUserRaw.email.toLowerCase(),
       });
     });
 
