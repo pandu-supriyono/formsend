@@ -30,7 +30,9 @@ export class User extends BaseEntity<IUser, 'id'> implements IUser {
   })
   email: string;
 
-  @Property()
+  @Property({
+    hidden: true,
+  })
   password: string;
 
   @Enum(() => UserRole)

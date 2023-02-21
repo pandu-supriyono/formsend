@@ -4,7 +4,8 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig({
-  entities: ['./src/**/*.entity.ts'],
+  entities: ['./dist/**/*.entity.js'],
+  entitiesTs: ['./src/**/*.entity.ts'],
   clientUrl: process.env.POSTGRES_URL,
   type: 'postgresql',
   seeder: {
@@ -13,5 +14,6 @@ export default defineConfig({
   },
   migrations: {
     path: './src/mikro-orm/migrations',
+    emit: 'ts',
   },
 });

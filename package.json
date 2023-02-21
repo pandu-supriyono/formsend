@@ -36,6 +36,7 @@
     "connect-pg-simple": "^8.0.0",
     "dotenv": "^16.0.3",
     "express-session": "^1.17.3",
+    "jest-mock-extended": "^3.0.1",
     "nestjs-pino": "^3.1.2",
     "pino-http": "^8.3.3",
     "pino-pretty": "^9.3.0",
@@ -43,6 +44,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
@@ -69,9 +71,11 @@
     "typescript": "^4.7.4"
   },
   "mikro-orm": {
+    "tsConfigPath": "./tsconfig.mikro-orm.json",
     "useTsNode": true,
     "configPaths": [
-      "./src/mikro-orm/mikro-orm.config.ts"
+      "./src/mikro-orm/mikro-orm.config.ts",
+      "./dist/mikro-orm/mikro-orm.config.js"
     ]
   },
   "jest": {
