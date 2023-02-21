@@ -1,13 +1,20 @@
-import { IsBoolean, IsEmail, IsString, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class SignInDto {
   @IsEmail()
   email: string;
 
   @IsString()
-  @Min(1)
+  @MinLength(1)
   password: string;
 
   @IsBoolean()
-  remember?: boolean;
+  @IsOptional()
+  remember?: boolean = false;
 }
