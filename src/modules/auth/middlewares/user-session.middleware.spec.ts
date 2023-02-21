@@ -1,18 +1,27 @@
 import { User } from '@/modules/user/entities/user.entity';
 import { UserService } from '@/modules/user/services/user.service';
+import { MikroORM } from '@mikro-orm/postgresql';
 import { NextFunction, Request, Response } from 'express';
 import { mock, mockClear } from 'jest-mock-extended';
 import { UserSessionMiddleware } from './user-session.middleware';
 
+jest.mock('@mikro-orm/core', () => {
+  return {
+    ...jest.requireActual('@mikro-orm/core'),
+    UseRequestContext: () => jest.fn(),
+  };
+});
+
 describe('UserSessionMiddleware', () => {
   const userService = mock<UserService>();
+  const orm = mock<MikroORM>();
   let req: Request;
   let res: Response;
   let next: NextFunction;
   let userSessionMiddleware: UserSessionMiddleware;
 
   beforeEach(() => {
-    userSessionMiddleware = new UserSessionMiddleware(userService);
+    userSessionMiddleware = new UserSessionMiddleware(userService, orm);
 
     req = {
       session: {},
@@ -23,6 +32,7 @@ describe('UserSessionMiddleware', () => {
 
   afterEach(() => {
     mockClear(userService);
+    mockClear(orm);
     jest.resetAllMocks();
   });
 
