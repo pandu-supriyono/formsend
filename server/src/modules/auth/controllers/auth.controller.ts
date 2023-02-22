@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { SignInDto } from '../dtos/auth.dto';
 import { AuthService } from '../services/auth.service';
@@ -19,5 +26,11 @@ export class AuthController {
     req.session.user = result.user.id;
 
     return result.user;
+  }
+
+  @Post('sign-out')
+  @HttpCode(HttpStatus.OK)
+  async signOut(@Req() req: Request) {
+    req.session.user = null;
   }
 }
