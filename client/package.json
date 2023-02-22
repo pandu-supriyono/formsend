@@ -1,0 +1,16 @@
+{
+  "name": "@formsend/client",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "elm": "^0.19.1-5"
+  },
+  "scripts": {
+    "dev": "elm-watch hot",
+    "build": "mkdir -p ./dist && elm make ./src/Main.elm --output dist/app.js"
+  },
+  "devDependencies": {
+    "elm-watch": "^1.1.2"
+  }
+}
