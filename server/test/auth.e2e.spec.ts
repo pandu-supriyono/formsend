@@ -12,8 +12,9 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { User } from '@/modules/user/entities/user.entity';
 import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcryptjs';
+import { UserModule } from '@/modules/user/user.module';
 
-describe('AuthModule (e2e)', () => {
+describe('Auth (e2e)', () => {
   let app: INestApplication;
   let user: User;
   let em: EntityManager;
@@ -32,6 +33,7 @@ describe('AuthModule (e2e)', () => {
       imports: [
         MikroOrmModule.forRoot(mikroOrmConfig),
         AuthModule,
+        UserModule,
         ConfigModule.forRoot({
           validate: validateConfig,
         }),
@@ -163,6 +165,72 @@ describe('AuthModule (e2e)', () => {
       expect(result.headers['set-cookie'][0]).toEqual(
         expect.stringContaining('Expires='),
       );
+    });
+  });
+
+  describe('/api/auth/sign-out', () => {
+    it('is idempotent', async () => {
+      const server = app.getHttpServer();
+
+      const agent = request.agent(server);
+
+      await agent.post('/api/auth/sign-in').send({
+        email: fakeUserRaw.email,
+        password: fakeUserRaw.password,
+      });
+
+      await agent.post('/api/auth/sign-out');
+
+      const results = await Promise.all([
+        await agent.get('/api/users/me'),
+        await agent.get('/api/users/me'),
+      ]);
+
+      expect(results.map((result) => result.statusCode)).toEqual([403, 403]);
+    });
+  });
+
+  describe('/api/users/me', () => {
+    it('returns 403 when not signed in', async () => {
+      const result = await request(app.getHttpServer()).get('/api/users/me');
+
+      expect(result.statusCode).toEqual(403);
+    });
+
+    it('returns the user when signed in', async () => {
+      const server = app.getHttpServer();
+
+      const agent = request.agent(server);
+
+      await agent.post('/api/auth/sign-in').send({
+        email: fakeUserRaw.email,
+        password: fakeUserRaw.password,
+      });
+
+      const result = await agent.get('/api/users/me');
+
+      expect(result.body).toMatchObject({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      });
+    });
+
+    it('returns 403 after signing out', async () => {
+      const server = app.getHttpServer();
+
+      const agent = request.agent(server);
+
+      await agent.post('/api/auth/sign-in').send({
+        email: fakeUserRaw.email,
+        password: fakeUserRaw.password,
+      });
+
+      await agent.post('/api/auth/sign-out');
+
+      const result = await agent.get('/api/users/me');
+
+      expect(result.statusCode).toEqual(403);
     });
   });
 });
