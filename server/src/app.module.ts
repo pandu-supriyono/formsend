@@ -1,7 +1,9 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { LoggerModule } from 'nestjs-pino';
+import { join } from 'path';
 import { EnvironmentVariables, validateConfig, Environment } from './config';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
@@ -32,6 +34,17 @@ import { UserModule } from './modules/user/user.module';
     }),
     UserModule,
     AuthModule,
+    ServeStaticModule.forRoot(
+      {
+        rootPath: join(__dirname, '..', '..', 'client', 'dist'),
+        renderPath: 'app.js',
+        exclude: ['api/*'],
+      },
+      {
+        rootPath: join(__dirname, '..', '..', 'client', 'public'),
+        exclude: ['api/*'],
+      },
+    ),
   ],
   controllers: [],
   providers: [],

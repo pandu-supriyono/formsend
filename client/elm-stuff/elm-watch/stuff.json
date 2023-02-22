@@ -1,0 +1,10 @@
+{
+    "port": 51992,
+    "targets": {
+        "main": {
+            "compilationMode": "standard",
+            "browserUiPosition": "BottomLeft",
+            "openErrorOverlay": false
+        }
+    }
+}
